@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Girlfriend Day Fun Page</title>
+    <style>
+      .catch-heart {
+        font-size: 2.5em;
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        transition: transform 0.3s ease;
+        display: inline-block;
+        margin: 0 auto;
+        width: fit-content;
+      }
+      .catch-heart:hover {
+        transform: scale(1.2);
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: #f5f1e3;
+        color: #222;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      section {
+        padding: 60px 20px;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease;
+      }
+      section.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .landing {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #fcbad3, #ffe0f0);
+        position: relative;
+        color: #222;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .landing h1 {
+        margin-top: 30px;
+        font-size: 2.5em;
+        color: #b30059;
+      }
+
+      .bouquet{
+        max-width: 300px;
+      }
+
+      .overlay-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.5em;
+        color: #b30059;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 40px;
+      }
+      .gallery img,
+      .gallery video {
+        width: 250px;
+        height: auto;
+        border: 10px solid #f5f1e3;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        transform: rotate(-2deg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        background: #fff;
+      }
+      .gallery img:hover,
+      .gallery video:hover {
+        transform: rotate(2deg) scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .compliment-box {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .compliment-box button {
+        padding: 10px 20px;
+        background: #4caf50;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        color: #222;
+        font-size: 1em;
+        transition: background 0.3s ease;
+      }
+
+      .compliment-box button:hover {
+        background: #3c9141;
+      }
+
+      .compliment-text {
+        margin-top: 15px;
+        font-size: 1.2em;
+        color: #4caf50;
+        min-height: 30px;
+      }
+
+      .counter {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 1.2em;
+        color: #222;
+      }
+
+      .kiss-popup {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #4caf50;
+        color: #f5f1e3;
+        padding: 20px;
+        border-radius: 50%;
+        font-size: 2em;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        z-index: 999;
+      }
+
+      .timeline {
+        display: flex;
+        overflow-x: auto;
+        gap: 30px;
+        padding: 20px;
+      }
+
+      .timeline div {
+        min-width: 200px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        flex: none;
+      }
+
+      .typing-text {
+        text-align: center;
+        font-size: 1.5em;
+        margin-top: 40px;
+        color: #4caf50;
+      }
+
+      .envelope {
+        width: 80px;
+        height: 60px;
+        background: #4caf50;
+        margin: 30px auto;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .envelope:before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        top: 0;
+        left: 0;
+        border-width: 30px 40px 0 40px;
+        border-color: #3c9141 transparent transparent transparent;
+      }
+
+      .letter {
+        display: none;
+        margin: 20px auto;
+        max-width: 300px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      .heart-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .landing-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .particle-flower {
+        position: absolute;
+        top: -50px;
+        font-size: 24px;
+        animation: fall 10s linear infinite;
+        opacity: 0.8;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translateY(-50px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Firework hearts */
+      .firework {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: red;
+        border-radius: 50%;
+        animation: explode 1s ease-out forwards;
+      }
+      @keyframes explode {
+        0% {
+          transform: scale(0.5);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(3);
+          opacity: 0;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Landing -->
+    <section class="landing">
+      <div class="landing-particles" id="flowerContainer"></div>
+      <div class="tulip-text-container">
+        <img src="pink-tulip.png" alt="Pink Tulip" class="bouquet" />
+        <h1 class="overlay-text">Happy Girlfriend Day, My Love 💖</h1>
+      </div>
+    </section>
+
+    <!-- Catch Me -->
+    <section>
+      <h2 style="text-align: center">Catch My Love For You</h2>
+      <div class="heart-container">
+        <div class="catch-heart" id="runButton">❤️</div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section>
+      <h2 style="text-align: center">The Girl I Love</h2>
+      <div class="gallery">
+        <img src="image1.jpg" alt="Pic1" />
+        <video controls width="250">
+          <source src="video.mp4" type="video/mp4" />
+        </video>
+        <img src="img2.jpg" alt="Pic2" />
+        <img src="img3.jpg" alt="Pic2" />
+        <video controls width="250">
+          <source src="video1.mp4" type="video/mp4" />
+        </video>
+        <video controls width="250">
+          <source src="video2.mp4" type="video/mp4" />
+        </video>
+        <video controls width="250">
+          <source src="video3.mp4" type="video/mp4" />
+        </video>
+        <img src="img5.jpg" alt="Pic2" />
+      </div>
+    </section>
+
+    <!-- Compliment Generator -->
+    <section>
+      <h2 style="text-align: center">Random Funny Compliments</h2>
+      <div class="compliment-box">
+        <button id="complimentBtn">Give me a compliment</button>
+        <div class="compliment-text" id="complimentText"></div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section>
+      <h2 style="text-align: center">Our Journey So Far</h2>
+      <div class="timeline">
+        <div>Met On - 20 April 2025</div>
+        <div>First Date - 22 April 2025</div>
+        <div>Fell in Love - 27 May 2025</div>
+        <div>Second Date - 9 June 2025</div>
+        <div>Our journey Continues...</div>
+      </div>
+    </section>
+
+    <!-- Typing Quote -->
+    <section>
+      <div class="typing-text" id="typingText"></div>
+    </section>
+
+    <!-- Envelope Letter -->
+    <section>
+      <h2 style="text-align: center">Open My Secret Letter</h2>
+      <div class="envelope" id="envelope"></div>
+      <div class="letter" id="letter">
+        Life works in crazy ways i would never have imagined on the 21st of april 2025 the shy nerd I met on the bed a day before that i could barely remember your name the next night would someday be my girlfriend. From the first nught i spent with you on that sofa we saw night turn into day you were on my lap the smile in your face the most beautiful I have ever seen we shared laughs and immediately i felt the spark it almost felt too good to be true we went on a date that morning thata was just an excuse to spend more time with you  it worked the date was a good first date but then we went our seperate ways not knowing how things were going to be from then on what were we friends? friends with benefit? certainly not loverrs that would have made for a sick weekend love story a sad icecream turned into a great romance, Thank you for shoing me love is real and love exists you are the best thing that happened to me this year i am really lucky to hae you as my girlfriend you are a prayer answered and i hope to continue in this journey with you i love you babe❤️. 
+       
+    </section>
+
+    <!-- Days Counter -->
+    <section>
+      <h2 style="text-align: center">Days Since I Fell For You</h2>
+      <div class="counter" id="daysCounter"></div>
+    </section>
+
+    <!-- Music -->
+    <section style="text-align: center">
+      <audio id="loveSong" src="your-song.mp3" autoplay></audio>
+    </section>
+
+    <!-- Gift Box -->
+    <section>
+      <h2 style="text-align:center">Open Your Gift 🎁</h2>
+      <div style="text-align:center;">
+        <img src="gift-box.png" alt="Gift" id="giftBox" style="width:100px; cursor:pointer;" />
+        <div id="giftContent" style="display:none; margin-top:20px;"></div>
+      </div>
+    </section>
+
+    <!-- Love Notes -->
+    <section>
+      <h2 style="text-align:center">Leave a Love Note</h2>
+      <div style="text-align:center">
+        <textarea id="loveNoteInput" placeholder="Write something sweet..." rows="3" style="width:90%; max-width:400px;"></textarea><br>
+        <button id="postNote">Post Note</button>
+      </div>
+      <div id="loveNotesWall" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:20px;"></div>
+    </section>
+
+    <!-- Kiss Popup -->
+    <div class="kiss-popup" id="kissPopup">💋</div>
+
+    <script>
+      /* Fade-in sections */
+      const sections = document.querySelectorAll("section");
+      window.addEventListener("scroll", () => {
+        sections.forEach((sec) => {
+          if (sec.getBoundingClientRect().top < window.innerHeight - 50) {
+            sec.classList.add("show");
+          }
+        });
+      });
+
+/* Catch heart logic */
+const runButton = document.getElementById("runButton");
+let running = true;
+let moveCount = 0;
+const maxMoves = 12;
+
+// Move the heart randomly within the viewport
+function moveHeart() {
+  const container = document.querySelector(".heart-container");
+  const containerRect = container.getBoundingClientRect();
+
+  const maxX = container.clientWidth - runButton.offsetWidth;
+  const maxY = container.clientHeight - runButton.offsetHeight;
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  runButton.style.position = "absolute";
+  runButton.style.left = `${x}px`;
+  runButton.style.top = `${y}px`;
+}
+
+
+// On hover, move if still under maxMoves
+runButton.addEventListener("mouseover", () => {
+  if (!running) return;
+
+  moveHeart();
+  moveCount++;
+
+  if (moveCount >= maxMoves) {
+    running = false;
+    // Settle the heart in center
+    runButton.style.transition = "all 0.5s ease";
+    runButton.style.left = "calc(50% - 25px)";
+runButton.style.top = "calc(50% - 25px)";
+runButton.style.transform = "none";
+  }
+});
+
+// On click, show reward only if movement is finished
+runButton.addEventListener("click", () => {
+  if (running) return;
+
+  document.getElementById("kissPopup").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("kissPopup").style.display = "none";
+  }, 2000);
+
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+  runButton.remove();
+  const rewardText = document.createElement("div");
+rewardText.textContent = "You caught my heart 💖";
+
+// Place inside the heart container
+const container = document.querySelector(".heart-container");
+Object.assign(rewardText.style, {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  fontSize: "1.5em",
+  color: "#b30059",
+  background: "#fff",
+  padding: "15px 20px",
+  borderRadius: "12px",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+  zIndex: "10",
+});
+container.appendChild(rewardText);
+setTimeout(() => rewardText.remove(), 3000);
+
+});
+
+
+      /* Compliments */
+      const compliments = [
+        "Thank you for coming into my life.",
+        "You're funny sometimes 😂",
+        "My best moments are when I see your name pop up.",
+        "You have a fat juicy ass 🍑",
+        "You are really good with ice cream 👀",
+        "You're proof that love is real!",
+      ];
+      document.getElementById("complimentBtn").addEventListener("click", () => {
+        document.getElementById("complimentText").textContent =
+          compliments[Math.floor(Math.random() * compliments.length)];
+      });
+
+      /* Days counter */
+      const startDate = new Date("2025-04-20");
+      const today = new Date();
+      const days = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+      document.getElementById("daysCounter").textContent = `${days} days of loving you ❤️`;
+
+      /* Typing effect */
+      const text = "Every moment with you is my favorite memory ❤️";
+      let i = 0;
+      function typeEffect() {
+        if (i < text.length) {
+          document.getElementById("typingText").textContent += text.charAt(i);
+          i++;
+          setTimeout(typeEffect, 100);
+        }
+      }
+      typeEffect();
+
+      /* Envelope */
+      document.getElementById("envelope").addEventListener("click", () => {
+        const letter = document.getElementById("letter");
+        letter.style.display = letter.style.display === "block" ? "none" : "block";
+        confetti({ particleCount: 80, spread: 100, origin: { y: 0.6 } });
+      });
+
+      /* Auto play song */
+      window.addEventListener("load", () => {
+        const song = document.getElementById("loveSong");
+        song.play().catch(() => {
+          document.body.addEventListener(
+            "click",
+            () => {
+              song.play();
+            },
+            { once: true }
+          );
+        });
+      });
+
+      /* Falling flowers */
+      const flowerContainer = document.getElementById("flowerContainer");
+      const symbols = ["❤️", "🌹", "💐", "🌸", "🌷"];
+      function createFallingFlower() {
+        const flower = document.createElement("div");
+        flower.classList.add("particle-flower");
+        flower.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        flower.style.left = Math.random() * 100 + "vw";
+        flower.style.fontSize = Math.random() * 16 + 16 + "px";
+        flower.style.animationDuration = Math.random() * 5 + 5 + "s";
+        flowerContainer.appendChild(flower);
+        setTimeout(() => flower.remove(), 10000);
+      }
+      setInterval(createFallingFlower, 500);
+
+      /* Firework hearts on click */
+      document.body.addEventListener("click", (e) => {
+        for (let i = 0; i < 10; i++) {
+          const fw = document.createElement("div");
+          fw.classList.add("firework");
+          fw.style.left = `${e.clientX + (Math.random() * 50 - 25)}px`;
+          fw.style.top = `${e.clientY + (Math.random() * 50 - 25)}px`;
+          fw.style.background = ["#ff69b4", "#ff1493", "#ffb6c1"][
+            Math.floor(Math.random() * 3)
+          ];
+          document.body.appendChild(fw);
+          setTimeout(() => fw.remove(), 1000);
+        }
+      });
+
+      /* Heart mouse trail */
+      document.addEventListener("mousemove", (e) => {
+        const trail = document.createElement("div");
+        trail.textContent = "💖";
+        Object.assign(trail.style, {
+          position: "fixed",
+          left: e.pageX + "px",
+          top: e.pageY + "px",
+          pointerEvents: "none",
+          transform: `translate(-50%, -50%) scale(${Math.random() + 0.5})`,
+          opacity: 1,
+          transition: "opacity 1s ease-out",
+        });
+        document.body.appendChild(trail);
+        setTimeout(() => {
+          trail.style.opacity = 0;
+          setTimeout(() => trail.remove(), 1000);
+        }, 50);
+      });
+
+      /* Gift Box */
+      document.getElementById("giftBox").addEventListener("click", () => {
+        const giftContent = document.getElementById("giftContent");
+        giftContent.innerHTML = `<img src="suprise.png" alt="Surprise" style="width:250px; border-radius:10px;" /><p>Here is to your first of many Oscars!!! 🎉</p>`;
+        giftContent.style.display = "block";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      });
+
+      /* Love Notes */
+      document.getElementById("postNote").addEventListener("click", () => {
+        const text = document.getElementById("loveNoteInput").value.trim();
+        if (!text) return;
+        const note = document.createElement("div");
+        note.textContent = text;
+        Object.assign(note.style, {
+          padding: "10px",
+          background: "#fff",
+          border: "2px dashed #ff69b4",
+          borderRadius: "10px",
+          maxWidth: "200px",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        });
+        document.getElementById("loveNotesWall").appendChild(note);
+        document.getElementById("loveNoteInput").value = "";
+      });
+    </script>
+  </body>
+</html>
